@@ -7,6 +7,9 @@ jobs:
   preview:
     runs-on: ubuntu-latest
     container: docker.io/okteto/okteto:2.19.0
+    # defaults:
+    #   run:
+    #     working-directory: 
     steps:
       - name: Checkout Datahub Repository
         uses: actions/checkout@v3
@@ -15,23 +18,24 @@ jobs:
         uses: actions/checkout@v3
         with:
           repository: justinjao/cbioportal-docker-compose
+          ref: test-master
           path: cbioportal-docker-compose
 
 
-    # - name: Context
-    #   uses: okteto/context@latest
-    #   with:
-    #     url: ${{secrets.OKTETO_URL}}
-    #     token: ${{ secrets.OKTETO_TOKEN }}
+      - name: Context
+        uses: okteto/context@latest
+        with:
+          url: ${{secrets.OKTETO_URL}}
+          token: ${{ secrets.OKTETO_TOKEN }}
 
 
-    # - name: Deploy preview environment
-    #   uses: okteto/deploy-preview@latest
-    #   env:
-    #    GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-    #   with:
-    #     name: pr-${{ github.event.number }}-justinjao
-    #     timeout: 15m
+      - name: Deploy preview environment
+        uses: okteto/deploy-preview@latest
+        env:
+         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          name: pr-${{ github.event.number }}-justinjao
+          timeout: 15m
     
     # - name: Wait For Response
     #   uses: nev7n/wait_for_response@v1.0.1
