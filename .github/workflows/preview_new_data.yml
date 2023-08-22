@@ -17,8 +17,8 @@ jobs:
       - name: Extract Directory Name of New Study
         id: new-dir
         run: |
-          echo ${ echo "${{ steps.changed-files-dir-names.outputs.added_files }}" | awk '{print $1}' }
-          echo "NEW_DIR_NAME=${ echo ${{ steps.changed-files-dir-names.outputs.added_files }} | awk {print $1} }" >> $GITHUB_OUTPUT
+          echo $( echo "${{ steps.changed-files-dir-names.outputs.added_files }}" | awk '{print $1}' )
+          echo "NEW_DIR_NAME=$( echo ${{ steps.changed-files-dir-names.outputs.added_files }} | awk '{print $1}' )" >> $GITHUB_OUTPUT
 
   preview:
     needs: changed_files
