@@ -7,15 +7,18 @@ jobs:
   changed_files:
     runs-on: ubuntu-latest
     outputs:
-      new_study_dir: ${{steps.changed-files-dir-names.outputs.added_files[0]}}
+      new_study_dir: ${{steps.new-dir.outputs.NEW_DIR_NAME}}
     steps:
-      - name: Get Directory Name of New Study
+      - name: Get New Directories Added
         id: changed-files-dir-names
         uses: tj-actions/changed-files@v37
         with:
           dir_names: "true"
-      - name: Get Directory Name of New Study
-        run: echo ${{steps.changed-files-dir-names.outputs.added_files[0]}}
+      - name: Extract Directory Name of New Study
+        id: new-dir
+        run: |
+          echo awk '{print $1}' ${{ steps.changed-files-dir-names.outputs.added_files }}
+          echo "NEW_DIR_NAME=awk '{print $1}' ${{ steps.changed-files-dir-names.outputs.added_files }} >> '$GITHUB_OUTPUT"      
 
   preview:
     needs: changed_files
