@@ -6,7 +6,7 @@ on:
 jobs:
   preview:
     runs-on: ubuntu-latest
-    container: docker.io/okteto/okteto:2.19.1
+    container: okteto/pipeline-runner:1.0.3
     steps:
       - name: What Distro?
         run: cat /etc/*-release
