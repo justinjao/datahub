@@ -39,7 +39,7 @@ jobs:
         shell: bash
         run: |
           mkdir -p study/${{ needs.changed_files.outputs.new_study_name }}
-          cp -R ${{ needs.changed_files.outputs.new_study_dir }} study/${{ needs.changed_files.outputs.new_study_dir }}
+          cp -R ${{ needs.changed_files.outputs.new_study_dir }} study/${{ needs.changed_files.outputs.new_study_name }}
 
       - name: Context
         uses: okteto/context@latest
