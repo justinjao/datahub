@@ -6,7 +6,7 @@ on:
 jobs:
   preview:
     runs-on: ubuntu-latest
-    container: docker.io/okteto/okteto:2.19.0
+    # container: docker.io/okteto/okteto:2.19.0
     steps:
       - name: Get New Directories Added
         id: changed-files-dir-names
