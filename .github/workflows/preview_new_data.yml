@@ -28,7 +28,7 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Copy Files to Study Directory
-        run: cp -R ${{ needs.changed_files.outputs.new_study_dir }} study/$( grep -o "(?=\/).*" <<< ${{ needs.changed_files.outputs.new_study_dir }} )
+        run: cp -R ${{ needs.changed_files.outputs.new_study_dir }} study/$( cut -d "/" -f2- <<< ${{ needs.changed_files.outputs.new_study_dir }} )
 
       - name: Context
         uses: okteto/context@latest
