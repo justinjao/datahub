@@ -10,7 +10,7 @@ jobs:
     steps:
       - name: Get New Directories Added
         id: changed-files-dir-names
-        uses: tj-actions/changed-files@v37
+        uses: tj-actions/changed-files@v38
         with:
           dir_names: "true"
       - name: Extract Directory Name of New Study
