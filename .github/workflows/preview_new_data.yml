@@ -17,8 +17,10 @@ jobs:
       - name: Extract Directory Name of New Study
         id: new-dir
         run: |
-          echo $( echo "${{ steps.changed-files-dir-names.outputs.added_files }}" | awk '{print $1}' )
           echo "NEW_DIR_NAME=$( echo ${{ steps.changed-files-dir-names.outputs.added_files }} | awk '{print $1}' )" >> $GITHUB_OUTPUT
+
+      - name: Copy Files to Study Directory
+        run: cp -R ${{ steps.new-dir.outputs.NEW_DIR_NAME }} study/${{ steps.new-dir.outputs.NEW_DIR_NAME }}
 
   preview:
     needs: changed_files
@@ -60,4 +62,4 @@ jobs:
       - name: Kubectl test
         run: |
           okteto kubeconfig
-          kubectl exec -it deployment/cbioportal -- metaImport.py -u http://localhost:8080 -s ..${{needs.changed_files.outputs.new_study_dir}}/ -o
+          kubectl exec -it deployment/cbioportal -- metaImport.py -u http://localhost:8080 -s study/${{needs.changed_files.outputs.new_study_dir}}/ -o
