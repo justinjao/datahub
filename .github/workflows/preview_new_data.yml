@@ -4,11 +4,9 @@ on:
       - "*"
 
 jobs:
-  changed_files:
+  preview:
     runs-on: ubuntu-latest
-    outputs:
-      new_study_dir: ${{ steps.new-dir.outputs.NEW_DIR_LOCATION }}
-      new_study_name: ${{ steps.new-study.outputs.NEW_STUDY_NAME }}
+    container: docker.io/okteto/okteto@latest
     steps:
       - name: Get New Directories Added
         id: changed-files-dir-names
@@ -27,11 +25,6 @@ jobs:
         run: |
           echo "NEW_STUDY_NAME=$( cut -d "/" -f2- <<< ${{ steps.new-dir.outputs.NEW_DIR_LOCATION }} )" >> $GITHUB_OUTPUT
 
-  preview:
-    needs: changed_files
-    runs-on: ubuntu-latest
-    container: docker.io/okteto/okteto:2.19.0
-    steps:
       - name: Checkout Datahub Repository
         uses: actions/checkout@v3
 
@@ -39,7 +32,7 @@ jobs:
         shell: bash
         run: |
           mkdir -p study/${{ needs.changed_files.outputs.new_study_name }}
-          cp -R ${{ needs.changed_files.outputs.new_study_dir }} study/${{ needs.changed_files.outputs.new_study_name }}
+          cp -R ${{ steps.new-dir.outputs.NEW_DIR_LOCATION }} study/${{ steps.new-study.outputs.NEW_STUDY_NAME }}
 
       - name: Context
         uses: okteto/context@latest
@@ -70,7 +63,7 @@ jobs:
         with:
           namespace: pr-${{github.event.number}}-justinjao
 
-      - name: Kubectl test
+      - name: Import New Study Into Live Instance
         run: |
           okteto kubeconfig
-          kubectl exec -it deployment/cbioportal -- metaImport.py -u http://localhost:8080 -s study/${{needs.changed_files.outputs.new_study_name}}/ -o
+          kubectl exec -it deployment/cbioportal -- metaImport.py -u http://localhost:8080 -s study/${{steps.new-dir.outputs.NEW_STUDY_NAME}}/ -o
