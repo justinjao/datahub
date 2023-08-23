@@ -3,8 +3,14 @@ on:
     branches:
       - "*"
 
-jobs:  
+jobs:
+  sanity:
+    runs-on: ubuntu-latest
+    steps:
+      - name: dummy
+        run: ls
   preview:
+    needs: sanity
     runs-on: ubuntu-latest
     container: docker.io/okteto/okteto:2.19.0
     # defaults:
