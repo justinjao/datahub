@@ -13,7 +13,7 @@ jobs:
       - name: Get New Directories Added
         id: changed-files-dir-names
         run: |
-          echo "DUMMY=public/iamcrying asdf" >> $GITHUB_OUTPUT
+          echo "DUMMY=public/acbc_mskcc_2015 asdf" >> $GITHUB_OUTPUT
 
       - name: Extract Directory Name of New Study
         id: new-dir
