@@ -8,14 +8,6 @@ jobs:
     runs-on: ubuntu-latest
     container: okteto/pipeline-runner:1.0.3
     steps:
-      - name: What Distro?
-        run: cat /etc/*-release
-        
-      - name: Install Git
-        shell: bash
-        run: |
-          apk update
-          apk add git
 
       - name: Get New Directories Added
         id: changed-files-dir-names
