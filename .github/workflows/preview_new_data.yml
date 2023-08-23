@@ -8,9 +8,12 @@ jobs:
     runs-on: ubuntu-latest
     container: docker.io/okteto/okteto:2.19.1
     steps:
+      - name: What Distro?
+        run: cat /etc/*-release
+        
       - name: Install Git
         shell: bash
-        run: apt-get -y install git
+        run: sudo apk add --no-cache git
 
       - name: Get New Directories Added
         id: changed-files-dir-names
