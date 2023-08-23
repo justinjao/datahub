@@ -8,7 +8,7 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       new_study_dir: ${{ steps.new-dir.outputs.NEW_DIR_LOCATION }}
-      new_study_name: ${{ steps.new-dir.outputs.NEW_STUDY_NAME }}
+      new_study_name: ${{ steps.new-study.outputs.NEW_STUDY_NAME }}
     steps:
       - name: Get New Directories Added
         id: changed-files-dir-names
@@ -20,6 +20,11 @@ jobs:
         shell: bash
         run: |
           echo "NEW_DIR_LOCATION=$( echo ${{ steps.changed-files-dir-names.outputs.added_files }} | awk '{print $1}' )" >> $GITHUB_OUTPUT
+
+      - name: Extract New Study Name
+        id: new-study
+        shell: bash
+        run: |
           echo "NEW_STUDY_NAME=$( cut -d "/" -f2- <<< ${{ steps.new-dir.outputs.NEW_DIR_LOCATION }} )" >> $GITHUB_OUTPUT
 
   preview:
