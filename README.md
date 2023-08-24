@@ -19,7 +19,7 @@ After you have installed git-lfs, configure it not to download all data files ri
 ```
 git lfs install --skip-repo --skip-smudge
 ```
-
+  
 Clone the git repository and install lfs hooks into it:
 ```
 git clone https://github.com/cBioPortal/datahub.git
