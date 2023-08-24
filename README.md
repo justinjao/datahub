@@ -8,7 +8,7 @@ Validation status of all studies on Datahub master branch. This runs weekly usin
 
 [![CircleCI](https://circleci.com/gh/cBioPortal/datahub/tree/master.svg?style=svg)](https://circleci.com/gh/cBioPortal/datahub/tree/master)
 
-## How to Download Data
+## How to Download Data   
 ### Downloading zip files individual studies
 At [cbioportal.org datasets page](https://www.cbioportal.org/datasets) a zipped file with staging files from each study can be downloaded. These zip files are compressed versions of the study folders in the master branch of this repository.
 
