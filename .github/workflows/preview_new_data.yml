@@ -4,7 +4,15 @@ on:
       - "*"
 
 jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Okteto Build
+        uses: okteto/build@latest
+        with:
+          file: preview_infrastructure/cbioportal-docker-compose/okteto.yml
   changed_files:
+    needs: build
     runs-on: ubuntu-latest
     outputs:
       new_study_dir: ${{ steps.new-dir.outputs.NEW_DIR_LOCATION }}
