@@ -10,9 +10,17 @@ jobs:
     steps:
       - name: Checkout Datahub Repository
         uses: actions/checkout@v3
+
+      - name: Context
+        uses: okteto/context@latest
+        with:
+          url: ${{secrets.OKTETO_URL}}
+          token: ${{ secrets.OKTETO_TOKEN }}
+
       - name: Build cBioPortal Image with Initialization
+        working-directory: ./preview_infrastructure/cbioportal-docker-compose/
         run: |
-          ./preview_infrastructure/cbioportal-docker-compose/init.sh
+          ./init.sh
           okteto build --no-cache -t okteto.dev/datahub-cbioportal:okteto-with-volume-mounts cbioportal
   changed_files:
     needs: build
