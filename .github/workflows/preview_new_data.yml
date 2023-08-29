@@ -4,7 +4,18 @@ on:
       - "*"
 
 jobs:
+  build:
+    runs-on: ubuntu-latest
+    container: docker.io/okteto/okteto:2.19.1
+    steps:
+      - name: Checkout Datahub Repository
+        uses: actions/checkout@v3
+      - name: Build cBioPortal Image with Initialization
+        run: |
+          ./preview_infrastructure/cbioportal-docker-compose/init.sh
+          okteto build --no-cache -t okteto.dev/datahub-cbioportal:okteto-with-volume-mounts cbioportal
   changed_files:
+    needs: build
     runs-on: ubuntu-latest
     outputs:
       new_study_dir: ${{ steps.new-dir.outputs.NEW_DIR_LOCATION }}
@@ -52,7 +63,7 @@ jobs:
          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           name: pr-${{ github.event.number }}-justinjao
-          file: preview_infrastructure/cbioportal-docker-compose/okteto.yml
+          file: preview_infrastructure/cbioportal-docker-compose/docker-compose.yml
           timeout: 15m
     
       - name: Wait For Response
