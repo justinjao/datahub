@@ -6,7 +6,7 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    container: docker.io/okteto/okteto:2.19.1
+    container: okteto/pipeline-runner:1.0.3
     steps:
       - name: Checkout Datahub Repository
         uses: actions/checkout@v3
