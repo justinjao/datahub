@@ -37,8 +37,8 @@ jobs:
       - name: Copy Files to Study Directory
         shell: bash
         run: |
-          mkdir -p study/${{ needs.changed_files.outputs.new_study_name }}
-          cp -R ${{ needs.changed_files.outputs.new_study_dir }} study/${{ needs.changed_files.outputs.new_study_name }}
+          mkdir -p preview_infrastructure/cbioportal-docker-compose/study/${{ needs.changed_files.outputs.new_study_name }}
+          cp -R ${{ needs.changed_files.outputs.new_study_dir }} preview_infrastructure/cbioportal-docker-compose/study/${{ needs.changed_files.outputs.new_study_name }}
 
       - name: Context
         uses: okteto/context@latest
@@ -71,4 +71,6 @@ jobs:
       - name: Kubectl test
         run: |
           okteto kubeconfig
+          kubectl exec -it deployment/cbioportal -- ls
+          kubectl exec -it deployment/cbioportal -- ls study
           kubectl exec -it deployment/cbioportal -- metaImport.py -u http://localhost:8080 -s study/${{needs.changed_files.outputs.new_study_name}}/ -o
