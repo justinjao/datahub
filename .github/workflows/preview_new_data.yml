@@ -37,8 +37,8 @@ jobs:
       - name: Copy Files to Study Directory
         shell: bash
         run: |
-          mkdir -p preview_infrastructure/cbioportal-docker-compose/study/${{ needs.changed_files.outputs.new_study_name }}
-          cp -R ${{ needs.changed_files.outputs.new_study_dir }} preview_infrastructure/cbioportal-docker-compose/study/${{ needs.changed_files.outputs.new_study_name }}
+          mkdir -p preview_infrastructure/datahub/study/${{ needs.changed_files.outputs.new_study_name }}
+          cp -R ${{ needs.changed_files.outputs.new_study_dir }} preview_infrastructure/datahub/study/${{ needs.changed_files.outputs.new_study_name }}
 
       - name: Context
         uses: okteto/context@latest
@@ -52,7 +52,7 @@ jobs:
          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           name: pr-${{ github.event.number }}-justinjao
-          file: preview_infrastructure/cbioportal-docker-compose/okteto.yml
+          file: preview_infrastructure/datahub/okteto.yml
           timeout: 15m
     
       - name: Wait For Response
@@ -73,4 +73,4 @@ jobs:
           okteto kubeconfig
           kubectl exec -it deployment/cbioportal -- ls
           kubectl exec -it deployment/cbioportal -- ls study
-          kubectl exec -it deployment/cbioportal -- metaImport.py -u http://localhost:8080 -s preview_infrastructure/cbioportal-docker-compose/study/${{needs.changed_files.outputs.new_study_name}}/ -o
+          kubectl exec -it deployment/cbioportal -- metaImport.py -u http://localhost:8080 -s preview_infrastructure/datahub/study/${{needs.changed_files.outputs.new_study_name}}/ -o
