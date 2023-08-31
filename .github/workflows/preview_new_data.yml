@@ -54,6 +54,11 @@ jobs:
           name: pr-${{ github.event.number }}-justinjao
           file: preview_infrastructure/cbioportal-docker-compose/docker-compose.yml
           timeout: 15m
+
+      - name: ls
+        run: |
+          ls
+          ls study
     
       - name: Wait For Response
         uses: nev7n/wait_for_response@v1.0.1
@@ -67,6 +72,11 @@ jobs:
         uses: okteto/namespace@latest
         with:
           namespace: pr-${{github.event.number}}-justinjao
+      
+      - name: ls
+        run: |
+          ls
+          ls study
 
       - name: Kubectl test
         run: |
