@@ -89,4 +89,5 @@ jobs:
           kubectl exec -it deployment/cbioportal -- ls
           echo "MAYBE INSIDE? ls study:"
           kubectl exec -it deployment/cbioportal -- ls study
+          kubectl cp study/${{needs.changed_files.outputs.new_study_name}}/ deployment/cbioportal:study/${{needs.changed_files.outputs.new_study_name}}/
           kubectl exec -it deployment/cbioportal -- metaImport.py -u http://localhost:8080 -s study/${{needs.changed_files.outputs.new_study_name}}/ -o
