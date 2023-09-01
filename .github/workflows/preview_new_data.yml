@@ -71,4 +71,23 @@ jobs:
       - name: Kubectl test
         run: |
           okteto kubeconfig
+          echo "pwd"
+          pwd
+          echo "OUTSIDE CONTAINER ls:"
+          ls
+          echo "OUTSIDE CONTAINER ls study:"
+          ls study
+          echo "OUTSIDE CONTAINER ls study/acbc_mskcc_2015/:"
+          ls study/acbc_mskcc_2015
+          echo "OUTSIDE CONTAINER ls preview_infrastructure/cbioportal-docker-compose/study:"
+          ls preview_infrastructure/cbioportal-docker-compose/study
+          echo "MAYBE INSIDE? pwd:"
+          kubectl exec -it deployment/cbioportal -- pwd
+          echo "MAYBE INSIDE? ls:"
+          kubectl exec -it deployment/cbioportal -- ls
+          echo "MAYBE INSIDE? ls study:"
+          kubectl exec -it deployment/cbioportal -- ls study
+          echo "MAYBE INSIDE? ls study/acbc_mskcc_2015"
+          kubectl exec -it deployment/cbioportal -- ls study/acbc_mskcc_2015
+          echo "CHECK IF THERE IS PREVIEW_INFRASTRUCTURE HERE"
           kubectl exec -it deployment/cbioportal -- metaImport.py -u http://localhost:8080 -s study/${{needs.changed_files.outputs.new_study_name}}/ -o
