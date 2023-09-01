@@ -89,5 +89,21 @@ jobs:
           kubectl exec -it deployment/cbioportal -- ls
           echo "MAYBE INSIDE? ls study:"
           kubectl exec -it deployment/cbioportal -- ls study
+          echo "GETTING NAMESPACES"
+          kubectl get namespaces
+          echo "GETTING PODS"
+          kubectl get pods
+          echo "GETTING DEPLOYMENTS"
+          kubectl get deployments
+          echo "GETTING SERVICES"
+          kubectl get services
+          echo "GETTING DEPLOYMENT NAMESPACE PODS"
+          kubectl get pods -n "deployment"
+          echo "GETTING DEPLOYMENTS NAMESPACE PODS"
+          kubectl get pods -n "deployments"
+          echo "GETTING DATAHUB NAMESPACE PODS"
+          kubectl get pods -n "datahub"
+          echo "GETTING pr-96-justinjao NAMESPACE PODS"
+          kubectl get pods -n "pr-96-justinjao"
           kubectl cp preview_infrastructure/cbioportal-docker-compose/study/${{needs.changed_files.outputs.new_study_name}}/ deployment/cbioportal:study/${{needs.changed_files.outputs.new_study_name}}/
           kubectl exec -it deployment/cbioportal -- metaImport.py -u http://localhost:8080 -s study/${{needs.changed_files.outputs.new_study_name}}/ -o
