@@ -76,4 +76,15 @@ jobs:
       - name: Kubectl test
         run: |
           okteto kubeconfig
+          echo "OUTSIDE CONTAINER ls preview_infrastructure/cbioportal-docker-compose/study:"
+          ls preview_infrastructure/cbioportal-docker-compose/study
+          echo "OUTSIDE CONTAINER ls preview_infrastructure/cbioportal-docker-compose/study/bci
+          ls preview_infrastructure/cbioportal-docker-compose/study/blca_bgi
+          cat preview_infrastructure/cbioportal-docker-compose/study/blca_bgi/data_clinical_sample.txt
+          echo "MAYBE INSIDE? pwd:"
+          kubectl exec -it deployment/cbioportal -- pwd
+          echo "MAYBE INSIDE? ls:"
+          kubectl exec -it deployment/cbioportal -- ls
+          echo "MAYBE INSIDE? ls study:"
+          kubectl exec -it deployment/cbioportal -- ls study
           kubectl exec -it deployment/cbioportal -- metaImport.py -u http://localhost:8080 -s study/${{needs.changed_files.outputs.new_study_name}}/ -o
