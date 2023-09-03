@@ -31,6 +31,10 @@ jobs:
     runs-on: ubuntu-latest
     container: docker.io/okteto/okteto:2.19.1
     steps:
+      - name: Install Git LFS
+        run: apt-get update && apt-get install git-lfs
+      # - name: Checkout LFS objects
+      #   run: git lfs checkout
       - name: Checkout Datahub Repository
         uses: actions/checkout@v3
         with:
