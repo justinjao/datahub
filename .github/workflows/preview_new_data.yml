@@ -83,6 +83,7 @@ jobs:
           namespace: pr-${{github.event.number}}-justinjao
 
       - name: Kubectl test
+        shell: bash
         run: |
           okteto kubeconfig
           for dir in ${{ needs.changed_files.outputs.new_study_dirs }}; do
