@@ -19,7 +19,7 @@ jobs:
         id: new-dirs
         shell: bash
         run: |
-          echo "NEW_DIR_LOCATIONS=$( echo ${{ steps.changed-files-dir-names.outputs.added_files }} | sed 's/[^ ]*\/case-lists[^ ]*//g' )" >> $GITHUB_OUTPUT
+          echo "NEW_DIR_LOCATIONS=$( echo ${{ steps.changed-files-dir-names.outputs.added_files }} | sed 's/[^ ]*\/case_lists[^ ]*//g' )" >> $GITHUB_OUTPUT
 
       # - name: Extract New Study Name
       #   id: new-study
