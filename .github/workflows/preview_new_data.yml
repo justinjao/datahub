@@ -31,6 +31,10 @@ jobs:
     runs-on: ubuntu-latest
     container: docker.io/okteto/okteto:2.19.1
     steps:
+      - name: Install Git LFS
+        run: apk update && apk add git-lfs
+      # - name: Checkout LFS objects
+      #   run: git lfs checkout
       - name: Checkout Datahub Repository
         uses: actions/checkout@v3
         with:
@@ -80,7 +84,7 @@ jobs:
           okteto kubeconfig
           echo "OUTSIDE CONTAINER ls preview_infrastructure/cbioportal-docker-compose/study:"
           ls preview_infrastructure/cbioportal-docker-compose/study
-          echo "OUTSIDE CONTAINER ls preview_infrastructure/cbioportal-docker-compose/study/bci
+          echo "OUTSIDE CONTAINER ls preview_infrastructure/cbioportal-docker-compose/study/bci"
           ls preview_infrastructure/cbioportal-docker-compose/study/blca_bgi
           cat preview_infrastructure/cbioportal-docker-compose/study/blca_bgi/data_clinical_sample.txt
           echo "MAYBE INSIDE? pwd:"
