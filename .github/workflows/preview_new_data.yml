@@ -32,7 +32,7 @@ jobs:
     container: docker.io/okteto/okteto:2.19.1
     steps:
       - name: Install Git LFS
-        run: apk update && ak add git-lfs
+        run: apk update && apk add git-lfs
       # - name: Checkout LFS objects
       #   run: git lfs checkout
       - name: Checkout Datahub Repository
