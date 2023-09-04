@@ -7,25 +7,26 @@ jobs:
   changed_files:
     runs-on: ubuntu-latest
     outputs:
-      new_study_dir: ${{ steps.new-dir.outputs.NEW_DIR_LOCATION }}
-      new_study_name: ${{ steps.new-study.outputs.NEW_STUDY_NAME }}
+      new_study_dirs: ${{ steps.new-dirs.outputs.NEW_DIR_LOCATIONS }}
+      # new_study_names: ${{ steps.new-study.outputs.NEW_STUDY_NAMES }}
     steps:
       - name: Get New Directories Added
         id: changed-files-dir-names
         uses: tj-actions/changed-files@v38
         with:
           dir_names: "true"
-      - name: Extract Directory Name of New Study
-        id: new-dir
+      - name: Extract Parent Directory Names of New Studies
+        id: new-dirs
         shell: bash
         run: |
-          echo "NEW_DIR_LOCATION=$( echo ${{ steps.changed-files-dir-names.outputs.added_files }} | awk '{print $1}' )" >> $GITHUB_OUTPUT
+          echo "NEW_DIR_LOCATIONS=$( echo ${{ steps.changed-files-dir-names.outputs.added_files }} | sed 's/[^ ]*\/case_lists[^ ]*//g' )" >> $GITHUB_OUTPUT
 
-      - name: Extract New Study Name
-        id: new-study
-        shell: bash
-        run: |
-          echo "NEW_STUDY_NAME=$( cut -d "/" -f2- <<< ${{ steps.new-dir.outputs.NEW_DIR_LOCATION }} )" >> $GITHUB_OUTPUT
+      # - name: Extract New Study Name
+      #   id: new-study
+      #   shell: bash
+      #   run: |
+      #     echo "NEW_STUDY_NAMES=$( cut -d "/" -f2- <<< ${{ steps.new-dirs.outputs.NEW_DIR_LOCATIONS }} )" >> $GITHUB_OUTPUT
+      #     sed 's/public\///g'
   preview:
     needs: changed_files
     runs-on: ubuntu-latest
@@ -43,8 +44,10 @@ jobs:
       - name: Copy Files to Study Directory
         shell: bash
         run: |
-          # mkdir -p study/${{ needs.changed_files.outputs.new_study_name }}
-          cp -v -R ${{ needs.changed_files.outputs.new_study_dir }} preview_infrastructure/cbioportal-docker-compose/study/${{ needs.changed_files.outputs.new_study_name }}
+          for dir in ${{ needs.changed_files.outputs.new_study_dirs }}; do
+            study_name=$( cut -d "/" -f2- <<< ${dir}) # remove public/ from dir name
+            cp -v -R ${dir} preview_infrastructure/cbioportal-docker-compose/study/${study_name}
+          done
 
       - name: Context
         uses: okteto/context@latest
@@ -80,17 +83,10 @@ jobs:
           namespace: pr-${{github.event.number}}-justinjao
 
       - name: Kubectl test
+        shell: bash
         run: |
           okteto kubeconfig
-          echo "OUTSIDE CONTAINER ls preview_infrastructure/cbioportal-docker-compose/study:"
-          ls preview_infrastructure/cbioportal-docker-compose/study
-          echo "OUTSIDE CONTAINER ls preview_infrastructure/cbioportal-docker-compose/study/bci"
-          ls preview_infrastructure/cbioportal-docker-compose/study/blca_bgi
-          cat preview_infrastructure/cbioportal-docker-compose/study/blca_bgi/data_clinical_sample.txt
-          echo "MAYBE INSIDE? pwd:"
-          kubectl exec -it deployment/cbioportal -- pwd
-          echo "MAYBE INSIDE? ls:"
-          kubectl exec -it deployment/cbioportal -- ls
-          echo "MAYBE INSIDE? ls study:"
-          kubectl exec -it deployment/cbioportal -- ls study
-          kubectl exec -it deployment/cbioportal -- metaImport.py -u http://localhost:8080 -s study/${{needs.changed_files.outputs.new_study_name}}/ -o
+          for dir in ${{ needs.changed_files.outputs.new_study_dirs }}; do
+            study_name=$( cut -d "/" -f2- <<< ${dir}) # remove public/ from dir name
+            kubectl exec -it deployment/cbioportal -- metaImport.py -u http://localhost:8080 -s study/${study_name} -o
+          done
