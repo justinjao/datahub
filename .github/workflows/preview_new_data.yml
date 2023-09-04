@@ -19,7 +19,7 @@ jobs:
         id: new-dirs
         shell: bash
         run: |
-          echo "NEW_DIR_LOCATIONS=$( echo ${{ steps.changed-files-dir-names.outputs.added_files }} | sed 's/[^ ]*\/case-lists[^ ]*//g' )" >> $GITHUB_OUTPUT
+          echo "NEW_DIR_LOCATIONS=$( echo ${{ steps.changed-files-dir-names.outputs.added_files }} | sed 's/[^ ]*\/case_lists[^ ]*//g' )" >> $GITHUB_OUTPUT
 
       # - name: Extract New Study Name
       #   id: new-study
@@ -45,7 +45,7 @@ jobs:
         shell: bash
         run: |
           for dir in ${{ needs.changed_files.outputs.new_study_dirs }}; do
-            study_name=$( cut -d "/" -f2- <<< ${dir} # remove public/ from dir name
+            study_name=$( cut -d "/" -f2- <<< ${dir}) # remove public/ from dir name
             cp -v -R ${dir} preview_infrastructure/cbioportal-docker-compose/study/${study_name}
           done
 
@@ -83,9 +83,10 @@ jobs:
           namespace: pr-${{github.event.number}}-justinjao
 
       - name: Kubectl test
+        shell: bash
         run: |
           okteto kubeconfig
           for dir in ${{ needs.changed_files.outputs.new_study_dirs }}; do
-            study_name=$( cut -d "/" -f2- <<< ${dir} # remove public/ from dir name
+            study_name=$( cut -d "/" -f2- <<< ${dir}) # remove public/ from dir name
             kubectl exec -it deployment/cbioportal -- metaImport.py -u http://localhost:8080 -s study/${study_name} -o
           done
