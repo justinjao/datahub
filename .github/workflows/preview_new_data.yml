@@ -47,7 +47,7 @@ jobs:
       - name: Okteto Build to Import Studies
         working-directory: preview
         run: |
-          okteto build --no-cache -t okteto.dev/datahub-cbioportal:okteto-with-volume-mounts cbioportal
+          okteto build --no-cache  # -t okteto.dev/datahub-cbioportal:okteto-with-volume-mounts cbioportal
 
       - name: Deploy preview environment
         uses: okteto/deploy-preview@latest
