@@ -28,8 +28,8 @@ jobs:
         run: apk update && apk add git-lfs
       - name: Checkout Datahub Repository
         uses: actions/checkout@v3
-        with:
-          lfs: true
+        # with:
+        #   lfs: true
       - name: Copy Files to Study Directory
         shell: bash
         run: |
@@ -45,7 +45,7 @@ jobs:
           token: ${{ secrets.OKTETO_TOKEN }}
 
       - name: Okteto Build to Import Studies
-        working-directory: preview_infrastructure/cbioportal-docker-compose
+        working-directory: preview
         run: |
           okteto build --no-cache -t okteto.dev/datahub-cbioportal:okteto-with-volume-mounts cbioportal
 
