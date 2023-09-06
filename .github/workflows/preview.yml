@@ -3,7 +3,7 @@ on:
       branches:
         - "*"
   
-  jobs:
+jobs:
     changed_files:
       runs-on: ubuntu-latest
       outputs:
