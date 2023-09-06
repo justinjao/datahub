@@ -44,7 +44,13 @@ jobs:
           sparse-checkout: |
             preview_infrastructure/*
             $( echo ${{ needs.changed_files.outputs.new_study_dirs }} | tr ' ' '\n')
-
+      
+      - name: ls files
+        run: |
+          ls
+          ls preview_infrastructure/cbioportal-docker-compose
+          ls public
+          echo $( echo ${{ needs.changed_files.outputs.new_study_dirs }} | tr ' ' '\n')
 
       - name: Copy Files to Study Directory
         shell: bash
