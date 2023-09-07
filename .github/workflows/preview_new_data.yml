@@ -49,7 +49,8 @@ jobs:
           sparse-checkout-cone-mode: false
           sparse-checkout: |
             preview_infrastructure/*
-            "$( echo ${{ needs.changed_files.outputs.new_study_dirs }} | tr ' ' '\n')"
+            public
+            # "$( echo ${{ needs.changed_files.outputs.new_study_dirs }} | tr ' ' '\n')"
       
       - name: ls files
         run: |
