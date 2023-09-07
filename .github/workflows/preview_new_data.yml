@@ -29,10 +29,16 @@ jobs:
       - name: Install Git LFS
         run: apk update && apk add git-lfs
 
+      # - name: Split Dirs
+      #   id: split
+      #   run: |
+      #     echo "TEST_DIR=$( echo ${{ needs.changed_files.outputs.new_study_dirs }} | tr ' ' '\n')" >> $GITHUB_OUTPUT
       - name: Split Dirs
         id: split
         run: |
-          echo "TEST_DIR=$( echo ${{ needs.changed_files.outputs.new_study_dirs }} | tr ' ' '\n')" >> $GITHUB_OUTPUT
+          echo "TEST_DIR<<EOF" >> $GITHUB_ENV
+          echo "$( echo ${{ needs.changed_files.outputs.new_study_dirs }} | tr ' ' '\n')" >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
       - name: Checkout Datahub Repository
         uses: actions/checkout@v4
         with:
@@ -42,7 +48,7 @@ jobs:
             preview_infrastructure/*
             # public/*
             # "$( echo ${{ needs.changed_files.outputs.new_study_dirs }} | tr ' ' '\n')"
-            ${{steps.split.outputs.TEST_DIR }}
+            ${{env.TEST_DIR }}
       - name: ls
         run: ls public
       - name: Copy Files to Study Directory
