@@ -59,38 +59,38 @@ jobs:
             cp -v -R ${dir} preview_infrastructure/cbioportal-docker-compose/study/${study_name}
           done
 
-      # - name: Context
-      #   uses: okteto/context@latest
-      #   with:
-      #     url: ${{secrets.OKTETO_URL}}
-      #     token: ${{ secrets.OKTETO_TOKEN }}
+      - name: Context
+        uses: okteto/context@latest
+        with:
+          url: ${{secrets.OKTETO_URL}}
+          token: ${{ secrets.OKTETO_TOKEN }}
 
       - name: Okteto Build to Import Studies
         working-directory: preview_infrastructure/cbioportal-docker-compose
         run: |
           okteto build --no-cache -t okteto.dev/datahub-cbioportal:okteto-with-volume-mounts cbioportal
 
-      # - name: Deploy preview environment
-      #   uses: okteto/deploy-preview@latest
-      #   env:
-      #    GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      #   with:
-      #     name: pr-${{ github.event.number }}-justinjao
-      #     file: preview_infrastructure/cbioportal-docker-compose/docker-compose.yml
-      #     timeout: 15m
+      - name: Deploy preview environment
+        uses: okteto/deploy-preview@latest
+        env:
+         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          name: pr-${{ github.event.number }}-justinjao
+          file: preview_infrastructure/cbioportal-docker-compose/docker-compose.yml
+          timeout: 15m
     
-      # - name: Wait For Response
-      #   uses: nev7n/wait_for_response@v1.0.1
-      #   with:
-      #     url: 'https://cbioportal-pr-${{ github.event.number }}-justinjao.cloud.okteto.net/'
-      #     responseCode: 200
-      #     timeout: 600000 # 10 minutes
-      #     interval: 30000 # 30 seconds
+      - name: Wait For Response
+        uses: nev7n/wait_for_response@v1.0.1
+        with:
+          url: 'https://cbioportal-pr-${{ github.event.number }}-justinjao.cloud.okteto.net/'
+          responseCode: 200
+          timeout: 600000 # 10 minutes
+          interval: 30000 # 30 seconds
 
-      # - name: "Activate Namespace"
-      #   uses: okteto/namespace@latest
-      #   with:
-      #     namespace: pr-${{github.event.number}}-justinjao
+      - name: "Activate Namespace"
+        uses: okteto/namespace@latest
+        with:
+          namespace: pr-${{github.event.number}}-justinjao
 
       - name: Kubectl test
         shell: bash
