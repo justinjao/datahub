@@ -37,8 +37,13 @@ jobs:
           sparse-checkout: |
             preview_infrastructure/*
             public/*
-            # !public/ccle_broad_2019
-
+            !public/ccle_broad_2019
+            !brca_tcga_pan_can_atlas_2018
+            !brca_metabric
+            !brca_tcga
+            !brca_tcga_pub2015
+      - name: ls
+        run: ls public
       - name: Copy Files to Study Directory
         shell: bash
         run: |
