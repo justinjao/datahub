@@ -16,6 +16,7 @@ jobs:
         uses: tj-actions/changed-files@v38
         with:
           dir_names: "true"
+          separator: '\n'
       - name: Extract Parent Directory Names of New Studies
         id: new-dirs
         shell: bash
@@ -50,7 +51,8 @@ jobs:
           sparse-checkout: |
             preview_infrastructure/*
             # public
-            ${$(echo "$( echo ${{ needs.changed_files.outputs.new_study_dirs }} | tr ' ' '\n')")}
+            ${{ needs.changed_files.outputs.new_study_dirs }}
+            # ${$(echo "$( echo ${{ needs.changed_files.outputs.new_study_dirs }} | tr ' ' '\n')")}
       
       - name: ls files
         run: |
