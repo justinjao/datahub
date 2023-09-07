@@ -14,7 +14,6 @@ jobs:
         uses: tj-actions/changed-files@v38
         with:
           dir_names: "true"
-          separator: '\n'
       - name: Extract Parent Directory Names of New Studies
         id: new-dirs
         shell: bash
@@ -36,12 +35,8 @@ jobs:
           sparse-checkout-cone-mode: false
           sparse-checkout: |
             preview_infrastructure/*
-            public/*
-            !public/ccle_broad_2019
-            !brca_tcga_pan_can_atlas_2018
-            !brca_metabric
-            !brca_tcga
-            !brca_tcga_pub2015
+            # public/*
+            ${$(echo "$( echo ${{ needs.changed_files.outputs.new_study_dirs }} | tr ' ' '\n')")}
       - name: ls
         run: ls public
       - name: Copy Files to Study Directory
