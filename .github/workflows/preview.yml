@@ -26,7 +26,7 @@ jobs:
       container: docker.io/okteto/okteto:2.19.1
       steps:
         - name: Install Git LFS
-          run: apk update && apk add git-lfs
+          run: apk update && apk add git-lfs && apk add git
         - name: Checkout Datahub Repository
           uses: actions/checkout@v3
           with:
