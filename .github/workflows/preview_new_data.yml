@@ -8,25 +8,19 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       new_study_dirs: ${{ steps.new-dirs.outputs.NEW_DIR_LOCATIONS }}
-      # new_study_names: ${{ steps.new-study.outputs.NEW_STUDY_NAMES }}
     steps:
       - name: Get New Directories Added
         id: changed-files-dir-names
         uses: tj-actions/changed-files@v38
         with:
           dir_names: "true"
+          separator: '\n'
       - name: Extract Parent Directory Names of New Studies
         id: new-dirs
         shell: bash
         run: |
           echo "NEW_DIR_LOCATIONS=$( echo ${{ steps.changed-files-dir-names.outputs.added_files }} | sed 's/[^ ]*\/case_lists[^ ]*//g' )" >> $GITHUB_OUTPUT
-
-      # - name: Extract New Study Name
-      #   id: new-study
-      #   shell: bash
-      #   run: |
-      #     echo "NEW_STUDY_NAMES=$( cut -d "/" -f2- <<< ${{ steps.new-dirs.outputs.NEW_DIR_LOCATIONS }} )" >> $GITHUB_OUTPUT
-      #     sed 's/public\///g'
+      
   preview:
     needs: changed_files
     runs-on: ubuntu-latest
@@ -34,18 +28,22 @@ jobs:
     steps:
       - name: Install Git LFS
         run: apk update && apk add git-lfs
-      # - name: Checkout LFS objects
-      #   run: git lfs checkout
+
       - name: Checkout Datahub Repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           lfs: true
           sparse-checkout-cone-mode: false
           sparse-checkout: |
             preview_infrastructure/*
-            $( echo ${{ needs.changed_files.outputs.new_study_dirs }} | tr ' ' '\n')
-
-
+            public/*
+            !public/ccle_broad_2019
+            !brca_tcga_pan_can_atlas_2018
+            !brca_metabric
+            !brca_tcga
+            !brca_tcga_pub2015
+      - name: ls
+        run: ls public
       - name: Copy Files to Study Directory
         shell: bash
         run: |
