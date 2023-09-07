@@ -44,6 +44,7 @@ jobs:
           sparse-checkout: |
             preview_infrastructure/*
             public/acbc_mskcc_2015
+            public/blca_bgi
             # $( echo ${{ needs.changed_files.outputs.new_study_dirs }} | tr ' ' '\n')
       
       - name: ls files
