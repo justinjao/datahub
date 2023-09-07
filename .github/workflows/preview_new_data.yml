@@ -8,6 +8,7 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       new_study_dirs: ${{ steps.new-dirs.outputs.NEW_DIR_LOCATIONS }}
+
     steps:
       - name: Get New Directories Added
         id: changed-files-dir-names
@@ -61,14 +62,16 @@ jobs:
         env:
          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          name: pr-${{ github.event.number }}-justinjao
+          name: pr-${{ github.event.number }}-averyniceday
           file: preview/cbioportal-docker-compose/docker-compose.yml
+
           timeout: 15m
     
       - name: Wait For Response
         uses: nev7n/wait_for_response@v1.0.1
         with:
-          url: 'https://cbioportal-pr-${{ github.event.number }}-justinjao.cloud.okteto.net/'
+          url: 'https://cbioportal-pr-${{ github.event.number }}-averyniceday.cloud.okteto.net/'
+
           responseCode: 200
           timeout: 600000 # 10 minutes
           interval: 30000 # 30 seconds
@@ -76,7 +79,7 @@ jobs:
       - name: Activate Namespace
         uses: okteto/namespace@latest
         with:
-          namespace: pr-${{github.event.number}}-justinjao
+          namespace: pr-${{github.event.number}}-averyniceday
 
       - name: Running MetaImport Script using Kubectl
         shell: bash
@@ -86,3 +89,4 @@ jobs:
             study_name=$( cut -d "/" -f2- <<< ${dir}) # remove public/ from dir name
             kubectl exec -it deployment/cbioportal -- metaImport.py -u http://localhost:8080 -s study/${study_name} -o
           done
+
