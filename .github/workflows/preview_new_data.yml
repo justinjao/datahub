@@ -50,7 +50,7 @@ jobs:
           sparse-checkout: |
             preview_infrastructure/*
             # public
-            $(echo "$( echo ${{ needs.changed_files.outputs.new_study_dirs }} | tr ' ' '\n')")
+            ${$(echo "$( echo ${{ needs.changed_files.outputs.new_study_dirs }} | tr ' ' '\n')")}
       
       - name: ls files
         run: |
