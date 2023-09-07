@@ -8,6 +8,7 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       new_study_dirs: ${{ steps.new-dirs.outputs.NEW_DIR_LOCATIONS }}
+      # new_study_dirs_newline_sep: ${{ steps.new-dirs.outputs.NEW_DIR_LOCATIONS_NL }}
       # new_study_names: ${{ steps.new-study.outputs.NEW_STUDY_NAMES }}
     steps:
       - name: Get New Directories Added
@@ -20,7 +21,11 @@ jobs:
         shell: bash
         run: |
           echo "NEW_DIR_LOCATIONS=$( echo ${{ steps.changed-files-dir-names.outputs.added_files }} | sed 's/[^ ]*\/case_lists[^ ]*//g' )" >> $GITHUB_OUTPUT
-
+      - name: Separate Directories By New Line
+        id: new-line-dirs
+        shell: bash
+        run: |
+            echo "$( echo ${{ needs.changed_files.outputs.new_study_dirs }} | tr ' ' '\n')"          
       # - name: Extract New Study Name
       #   id: new-study
       #   shell: bash
@@ -43,9 +48,7 @@ jobs:
           sparse-checkout-cone-mode: false
           sparse-checkout: |
             preview_infrastructure/*
-            public/acbc_mskcc_2015
-            public/blca_bgi
-            # $( echo ${{ needs.changed_files.outputs.new_study_dirs }} | tr ' ' '\n')
+            echo "$( echo ${{ needs.changed_files.outputs.new_study_dirs }} | tr ' ' '\n')"
       
       - name: ls files
         run: |
