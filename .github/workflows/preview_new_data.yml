@@ -21,11 +21,7 @@ jobs:
         shell: bash
         run: |
           echo "NEW_DIR_LOCATIONS=$( echo ${{ steps.changed-files-dir-names.outputs.added_files }} | sed 's/[^ ]*\/case_lists[^ ]*//g' )" >> $GITHUB_OUTPUT
-      - name: Separate Directories By New Line
-        id: new-line-dirs
-        shell: bash
-        run: |
-            echo "$( echo ${{ needs.changed_files.outputs.new_study_dirs }} | tr ' ' '\n')"          
+      
       # - name: Extract New Study Name
       #   id: new-study
       #   shell: bash
@@ -37,6 +33,11 @@ jobs:
     runs-on: ubuntu-latest
     container: docker.io/okteto/okteto:2.19.1
     steps:
+      - name: Separate Directories By New Line
+        id: new-line-dirs
+        shell: bash
+        run: |
+            echo "$( echo ${{ needs.changed_files.outputs.new_study_dirs }} | tr ' ' '\n')"    
       - name: Install Git LFS
         run: apk update && apk add git-lfs
       # - name: Checkout LFS objects
@@ -48,14 +49,14 @@ jobs:
           sparse-checkout-cone-mode: false
           sparse-checkout: |
             preview_infrastructure/*
-            echo "$( echo ${{ needs.changed_files.outputs.new_study_dirs }} | tr ' ' '\n')"
+            "$( echo ${{ needs.changed_files.outputs.new_study_dirs }} | tr ' ' '\n')"
       
       - name: ls files
         run: |
           ls
           ls preview_infrastructure/cbioportal-docker-compose
           ls public
-          echo $( echo ${{ needs.changed_files.outputs.new_study_dirs }} | tr ' ' '\n')
+          echo "$( echo ${{ needs.changed_files.outputs.new_study_dirs }} | tr ' ' '\n')"
 
       - name: Copy Files to Study Directory
         shell: bash
