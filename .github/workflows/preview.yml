@@ -27,11 +27,10 @@ jobs:
     steps:
       - name: Install Git LFS
         run: apk update && apk add git-lfs
-
       - name: Split Dirs
         id: split
         run: |
-          echo "TEST_DIR<<EOF" >> $GITHUB_ENV
+          echo "STUDY_DIRS<<EOF" >> $GITHUB_ENV
           echo "$( echo ${{ needs.changed_files.outputs.new_study_dirs }} | tr ' ' '\n')" >> $GITHUB_ENV
           echo "EOF" >> $GITHUB_ENV
       - name: Checkout Datahub Repository
@@ -41,9 +40,7 @@ jobs:
           sparse-checkout-cone-mode: false
           sparse-checkout: |
             preview/*
-            ${{ env.TEST_DIR }}
-      - name: ls
-        run: ls public
+            ${{ env.STUDY_DIRS }}
       - name: Copy Files to Study Directory
         shell: bash
         run: |
@@ -84,6 +81,8 @@ jobs:
           namespace: pr-${{github.event.number}}-justinjao
 
       - name: Run Metaimport Script Using Kubectl
+        id: import-study
+        continue-on-error: true
         shell: bash
         run: |
           okteto kubeconfig
@@ -91,3 +90,9 @@ jobs:
             study_name=$( cut -d "/" -f2- <<< ${dir}) # remove public/ from dir name
             kubectl exec -it deployment/cbioportal -- metaImport.py -u http://localhost:8080 -s study/${study_name} -o
           done
+      - name: Add Comment if Import Failed
+        uses: mainmatter/continue-on-error-comment@v1
+        with:
+            repo-token: ${{ secrets.GITHUB_TOKEN }}
+            outcome: ${{ steps.import-study.outcome }}
+            test-id: Error code 1
