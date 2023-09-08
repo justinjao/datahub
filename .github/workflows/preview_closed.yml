@@ -2,7 +2,7 @@ on:
     pull_request:
       types:
         - closed
-pjobs:
+jobs:
     close-pr:
       runs-on: ubuntu-latest
       steps:
