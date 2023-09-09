@@ -4,7 +4,7 @@ on:
         - closed
  
 jobs:
-    close-pr:
+    destroy-pr-env:
       runs-on: ubuntu-latest
       steps:
       - name: Context
@@ -13,7 +13,7 @@ jobs:
           token: ${{ secrets.OKTETO_TOKEN }}
           url: ${{ secrets.OKTETO_URL }}
   
-      - name: Destroy preview environment
+      - name: Destroy Preview Environment
         uses: okteto/destroy-preview@latest
         with:
           name: pr-${{ github.event.number }}-justinjao
